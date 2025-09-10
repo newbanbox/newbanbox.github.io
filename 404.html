@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面未找到 - 多功能在线工具集</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #2ec4b6;
+            --warning-color: #ff9f1c;
+            --danger-color: #e71d36;
+            --gray-color: #6c757d;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7ff, #e6ebff);
+            color: var(--dark-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* 404内容区域 */
+        .error-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: 1rem;
+            text-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .error-title {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .error-description {
+            font-size: 1.2rem;
+            color: var(--gray-color);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .error-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+        }
+
+        .error-btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.4);
+        }
+
+        .error-btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .error-btn-secondary:hover {
+            background: var(--light-color);
+            transform: translateY(-3px);
+        }
+
+        .error-illustration {
+            max-width: 400px;
+            margin: 2rem auto;
+            opacity: 0.9;
+        }
+
+        .error-illustration svg {
+            width: 100%;
+            height: auto;
+            fill: var(--primary-color);
+        }
+
+        /* 页脚 */
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-links {
+            display: flex;
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .footer-links li {
+            margin: 0 1rem;
+        }
+
+        .footer-links a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .error-code {
+                font-size: 6rem;
+            }
+            
+            .error-title {
+                font-size: 2rem;
+            }
+            
+            .error-description {
+                font-size: 1rem;
+            }
+            
+            .error-actions {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .error-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 5rem;
+            }
+            
+            .error-title {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-tools"></i>
+                    <span>工具百宝箱</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#">所有工具</a></li>
+                    <li><a href="https://box.newban.cn/">关于</a></li>
+                    <li><a href="https://box.newban.cn/">联系</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 404内容区域 -->
+    <main class="container">
+        <div class="error-container">
+            <div class="error-code">404</div>
+            <h1 class="error-title">哎呀！页面未找到</h1>
+            <p class="error-description">
+                您访问的页面可能已被移除、重命名或暂时不可用。请检查URL是否正确，或使用下面的链接返回首页或浏览我们的工具集合。
+            </p>
+            
+            <div class="error-illustration">
+                <svg viewBox="0 0 500 300">
+                    <path d="M250,50 Q350,100 250,150 Q150,200 250,250" stroke="#4361ee" stroke-width="8" fill="none" stroke-dasharray="20,10"/>
+                    <circle cx="250" cy="50" r="10" fill="#4361ee"/>
+                    <circle cx="250" cy="250" r="10" fill="#4361ee"/>
+                    <path d="M100,150 L400,150" stroke="#e0e0e0" stroke-width="2" stroke-dasharray="5,5"/>
+                    <path d="M250,50 L250,250" stroke="#e0e0e0" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="250" y="280" text-anchor="middle" fill="#6c757d" font-size="14">您在这里</text>
+                </svg>
+            </div>
+            
+            <div class="error-actions">
+                <a href="https://box.newban.cn/" class="error-btn error-btn-primary">
+                    <i class="fas fa-home"></i> 返回首页
+                </a>
+                <a href="https://box.newban.cn/" class="error-btn error-btn-secondary">
+                    <i class="fas fa-tools"></i> 浏览工具
+                </a>
+                <a href="https://newban.cn/" class="error-btn error-btn-secondary">
+                    <i class="fas fa-question-circle"></i> 获取帮助
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 工具百宝箱. 所有权利保留.</p>
+                <ul class="footer-links">
+                    <li><a href="#">隐私政策</a></li>
+                    <li><a href="#">使用条款</a></li>
+                    <li><a href="#">反馈建议</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 添加简单的动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorCode = document.querySelector('.error-code');
+            const errorTitle = document.querySelector('.error-title');
+            const errorDesc = document.querySelector('.error-description');
+            const errorActions = document.querySelector('.error-actions');
+            
+            // 添加动画类
+            setTimeout(() => {
+                errorCode.style.opacity = '1';
+                errorCode.style.transform = 'translateY(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                errorTitle.style.opacity = '1';
+                errorTitle.style.transform = 'translateY(0)';
+            }, 300);
+            
+            setTimeout(() => {
+                errorDesc.style.opacity = '1';
+                errorDesc.style.transform = 'translateY(0)';
+            }, 500);
+            
+            setTimeout(() => {
+                errorActions.style.opacity = '1';
+                errorActions.style.transform = 'translateY(0)';
+            }, 700);
+        });
+    </script>
+</body>
+</html>
