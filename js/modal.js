@@ -16,6 +16,11 @@ function openTool(toolType) {
 
     // 根据工具类型设置模态框内容和标题
     switch (toolType) {
+        case 'musicRelease':
+
+        //跳转到二级页面
+        window.location.assign("./pages/music-release.html");
+            break;
         case 'imageToWord':
             modalTitle.textContent = '图片转Word工具';
             modalBody.innerHTML = `

@@ -113,10 +113,19 @@ const tools = [
 {
   id: 'bpmCalculator',
   title: '歌曲BPM计算器',
-  icon: 'music',
+  icon: 'drum',
   description: '通过敲击空格键或点击按钮计算歌曲的每分钟节拍数(BPM)。',
   category: 'audio',
   button_text: '使用工具'
+
+},
+{
+  id: 'musicRelease',
+  title: '音乐发行查询',
+  icon: 'music',
+  description: '查询歌曲在全球音乐平台的发行情况',
+  category: 'audio',
+  button_text: '打开查询'
 
 },
 

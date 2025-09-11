@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球音乐发行查询</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            color: white;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .search-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #4a69bd;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.2);
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, #4a69bd, #1e3799);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+        
+        .search-btn:active {
+            transform: translateY(0);
+        }
+        
+        .results-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+            display: none;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .results-header h2 {
+            font-size: 1.8rem;
+            color: #1e3799;
+        }
+        
+        .results-header .song-info {
+            font-size: 1.2rem;
+            color: #555;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: #666;
+        }
+        
+        .available-stat .stat-value {
+            color: #2ecc71;
+        }
+        
+        .not-available-stat .stat-value {
+            color: #e74c3c;
+        }
+        
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .platform-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 2px solid #e9ecef;
+        }
+        
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-color: #4a69bd;
+        }
+        
+        .platform-header {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+        }
+        
+        .platform-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #4a69bd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .platform-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .platform-status {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .status-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .available {
+            color: #2ecc71;
+        }
+        
+        .not-available {
+            color: #e74c3c;
+        }
+        
+        .status-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .platform-actions {
+            padding: 15px;
+            background: #f1f3f5;
+            text-align: center;
+        }
+        
+        .action-btn {
+            background: #4a69bd;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: #1e3799;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(74, 105, 189, 0.3);
+            border-radius: 50%;
+            border-top-color: #4a69bd;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading p {
+            font-size: 1.2rem;
+            color: #444;
+        }
+        
+        .error-message {
+            background: #ffecec;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #721c24;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .platforms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .form-group {
+                min-width: 100%;
+            }
+            
+            .search-btn {
+                width: 100%;
+            }
+            
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>全球音乐发行查询</h1>
+            <p>查询歌曲在全球各大音乐平台的发行情况</p>
+        </header>
+        
+        <div class="search-container">
+            <div class="search-form">
+                <div class="form-group">
+                    <label for="artist">歌手名称</label>
+                    <input type="text" id="artist" placeholder="请输入歌手名称">
+                </div>
+                <div class="form-group">
+                    <label for="song">歌曲名称</label>
+                    <input type="text" id="song" placeholder="请输入歌曲名称">
+                </div>
+                <button class="search-btn" id="searchBtn">
+                    <i class="fas fa-search"></i> 查询发行情况
+                </button>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                请输入歌手名称和歌曲名称
+            </div>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在查询全球音乐平台...</p>
+        </div>
+        
+        <div class="results-container" id="resultsContainer">
+            <div class="results-header">
+                <h2>发行情况</h2>
+                <div class="song-info" id="songInfo"></div>
+            </div>
+            
+            <div class="stats-container" id="statsContainer">
+                <div class="stat-box available-stat">
+                    <div class="stat-value" id="availableCount">0</div>
+                    <div class="stat-label">已发行平台</div>
+                </div>
+                <div class="stat-box not-available-stat">
+                    <div class="stat-value" id="notAvailableCount">0</div>
+                    <div class="stat-label">未发行平台</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="totalCount">0</div>
+                    <div class="stat-label">平台总数</div>
+                </div>
+            </div>
+            
+            <div class="platforms-grid" id="platformsGrid">
+                <!-- 平台卡片将通过JS动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全球音乐平台数据（已完善）
+        const musicPlatforms = [
+            // 中国平台
+            { id: 'qq', name: 'QQ音乐', color: '#31c27c' },
+            { id: 'netease', name: '网易云音乐', color: '#d43c33' },
+            { id: 'kugou', name: '酷狗音乐', color: '#2ca9e1' },
+            { id: 'kuwo', name: '酷我音乐', color: '#ff6a00' },
+            { id: 'xiami', name: '虾米音乐', color: '#ff6700' },
+            { id: 'migu', name: '咪咕音乐', color: '#ea1d5d' },
+            { id: 'douyin', name: '抖音音乐', color: '#000000' },
+            { id: 'xiaomi', name: '小米音乐', color: '#ff6700' },
+            { id: 'huawei', name: '华为音乐', color: '#ff0000' },
+            { id: 'oppo', name: 'OPPO音乐', color: '#1485f5' },
+            { id: 'vivo', name: 'vivo音乐', color: '#408ef5' },
+            
+            // 国际主流平台
+            { id: 'spotify', name: 'Spotify', color: '#1db954' },
+            { id: 'apple', name: 'Apple Music', color: '#fa586a' },
+            { id: 'youtube', name: 'YouTube Music', color: '#ff0000' },
+            { id: 'amazon', name: 'Amazon Music', color: '#ff9900' },
+            { id: 'tidal', name: 'Tidal', color: '#000000' },
+            { id: 'deezer', name: 'Deezer', color: '#feaa2d' },
+            { id: 'pandora', name: 'Pandora', color: '#00a0e3' },
+            { id: 'napster', name: 'Napster', color: '#000000' },
+            { id: 'iheartradio', name: 'iHeartRadio', color: '#c6007e' },
+            
+            // 亚洲平台
+            { id: 'kkbox', name: 'KKBOX', color: '#448ef6' },
+            { id: 'jiosaavn', name: 'JioSaavn', color: '#f5a623' },
+            { id: 'melon', name: 'Melon', color: '#00c73c' },
+            { id: 'genie', name: 'Genie', color: '#5c6bc0' },
+            { id: 'flo', name: 'FLO', color: '#4a148c' },
+            { id: 'bugs', name: 'Bugs', color: '#ff5722' },
+            { id: 'gaana', name: 'Gaana', color: '#f15a29' },
+            { id: 'hungama', name: 'Hungama', color: '#ff6d00' },
+            { id: 'joox', name: 'JOOX', color: '#f44336' },
+            { id: 'line', name: 'LINE Music', color: '#00c300' },
+            { id: 'awa', name: 'AWA', color: '#1e88e5' },
+            { id: 'recochoku', name: 'RecoChoku', color: '#e91e63' },
+            
+            // 其他地区平台
+            { id: 'yandex', name: 'Yandex Music', color: '#ffcc00' },
+            { id: 'soundcloud', name: 'SoundCloud', color: '#ff7700' },
+            { id: 'bandcamp', name: 'Bandcamp', color: '#629aa9' },
+            { id: 'anghami', name: 'Anghami', color: '#ff5252' },
+            { id: 'boomplay', name: 'Boomplay', color: '#00c853' },
+            { id: 'tiktok', name: 'TikTok Music', color: '#000000' },
+            { id: 'audiomack', name: 'Audiomack', color: '#ff6f00' },
+            { id: 'tunein', name: 'TuneIn', color: '#3a8bbb' },
+            { id: 'shazam', name: 'Shazam', color: '#0088ff' },
+            { id: 'vkontakte', name: 'VK Music', color: '#4a76a8' },
+            { id: 'qobuz', name: 'Qobuz', color: '#e64a19' },
+            { id: 'idagio', name: 'Idagio', color: '#0d47a1' }
+        ];
+        
+        // 模拟歌曲发行数据
+        const songAvailability = {
+            '周杰伦-七里香': {
+                qq: true,
+                netease: true,
+                kugou: true,
+                kuwo: true,
+                migu: true,
+                douyin: true,
+                xiaomi: true,
+                huawei: true,
+                oppo: true,
+                vivo: true,
+                spotify: true,
+                apple: true,
+                youtube: true,
+                tidal: true,
+                deezer: true,
+                kkbox: true,
+                joox: true,
+                yandex: false,
+                soundcloud: false,
+                pandora: true,
+                napster: true,
+                iheartradio: true,
+                melon: true,
+                genie: true,
+                flo: false,
+                bugs: false,
+                gaana: false,
+                hungama: false,
+                line: true,
+                awa: true,
+                recochoku: true,
+                anghami: false,
+                boomplay: false,
+                tiktok: true,
+                audiomack: false,
+                tunein: true,
+                shazam: true,
+                vkontakte: false,
+                qobuz: true,
+                idagio: false
+            },
+            'Taylor Swift-Cruel Summer': {
+                qq: true,
+                netease: true,
+                kugou: true,
+                kuwo: true,
+                migu: true,
+                douyin: true,
+                xiaomi: true,
+                huawei: true,
+                oppo: true,
+                vivo: true,
+                spotify: true,
+                apple: true,
+                youtube: true,
+                tidal: true,
+                deezer: true,
+                kkbox: true,
+                joox: true,
+                yandex: true,
+                soundcloud: true,
+                pandora: true,
+                napster: true,
+                iheartradio: true,
+                melon: true,
+                genie: true,
+                flo: true,
+                bugs: true,
+                gaana: true,
+                hungama: true,
+                line: true,
+                awa: true,
+                recochoku: true,
+                anghami: true,
+                boomplay: true,
+                tiktok: true,
+                audiomack: true,
+                tunein: true,
+                shazam: true,
+                vkontakte: true,
+                qobuz: true,
+                idagio: false
+            },
+            '林俊杰-江南': {
+                qq: true,
+                netease: true,
+                kugou: true,
+                kuwo: true,
+                migu: true,
+                douyin: true,
+                xiaomi: true,
+                huawei: true,
+                oppo: true,
+                vivo: true,
+                spotify: true,
+                apple: true,
+                youtube: true,
+                tidal: true,
+                deezer: true,
+                kkbox: true,
+                joox: true,
+                yandex: false,
+                soundcloud: false,
+                pandora: true,
+                napster: true,
+                iheartradio: true,
+                melon: true,
+                genie: true,
+                flo: false,
+                bugs: false,
+                gaana: false,
+                hungama: false,
+                line: true,
+                awa: true,
+                recochoku: true,
+                anghami: false,
+                boomplay: false,
+                tiktok: true,
+                audiomack: false,
+                tunein: true,
+                shazam: true,
+                vkontakte: false,
+                qobuz: true,
+                idagio: false
+            },
+            'BTS-Dynamite': {
+                qq: true,
+                netease: true,
+                kugou: true,
+                kuwo: true,
+                migu: true,
+                douyin: true,
+                xiaomi: true,
+                huawei: true,
+                oppo: true,
+                vivo: true,
+                spotify: true,
+                apple: true,
+                youtube: true,
+                tidal: true,
+                deezer: true,
+                kkbox: true,
+                joox: true,
+                yandex: true,
+                soundcloud: true,
+                pandora: true,
+                napster: true,
+                iheartradio: true,
+                melon: true,
+                genie: true,
+                flo: true,
+                bugs: true,
+                gaana: true,
+                hungama: true,
+                line: true,
+                awa: true,
+                recochoku: true,
+                anghami: true,
+                boomplay: true,
+                tiktok: true,
+                audiomack: true,
+                tunein: true,
+                shazam: true,
+                vkontakte: true,
+                qobuz: true,
+                idagio: false
+            }
+        };
+        
+        // DOM元素
+        const artistInput = document.getElementById('artist');
+        const songInput = document.getElementById('song');
+        const searchBtn = document.getElementById('searchBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const loading = document.getElementById('loading');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const platformsGrid = document.getElementById('platformsGrid');
+        const songInfo = document.getElementById('songInfo');
+        const availableCount = document.getElementById('availableCount');
+        const notAvailableCount = document.getElementById('notAvailableCount');
+        const totalCount = document.getElementById('totalCount');
+        
+        // 搜索按钮点击事件
+        searchBtn.addEventListener('click', searchMusicAvailability);
+        
+        // 回车键触发搜索
+        songInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchMusicAvailability();
+            }
+        });
+        
+        // 查询音乐发行情况
+        function searchMusicAvailability() {
+            const artist = artistInput.value.trim();
+            const song = songInput.value.trim();
+            
+            // 验证输入
+            if (!artist || !song) {
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            errorMessage.style.display = 'none';
+            loading.style.display = 'block';
+            resultsContainer.style.display = 'none';
+            
+            // 模拟API请求延迟
+            setTimeout(() => {
+                displayResults(artist, song);
+            }, 1500);
+        }
+        
+        // 显示查询结果
+        function displayResults(artist, song) {
+            const songKey = `${artist}-${song}`;
+            
+            // 更新歌曲信息
+            songInfo.textContent = `${artist} - ${song}`;
+            
+            // 清空之前的平台卡片
+            platformsGrid.innerHTML = '';
+            
+            // 初始化统计计数器
+            let available = 0;
+            let notAvailable = 0;
+            
+            // 创建平台卡片
+            musicPlatforms.forEach(platform => {
+                const isAvailable = songAvailability[songKey]?.[platform.id] || false;
+                
+                // 更新统计计数器
+                if (isAvailable) {
+                    available++;
+                } else {
+                    notAvailable++;
+                }
+                
+                const platformCard = document.createElement('div');
+                platformCard.className = 'platform-card';
+                
+                platformCard.innerHTML = `
+                    <div class="platform-header">
+                        <div class="platform-icon" style="background: ${platform.color}">
+                            <i class="fas fa-music"></i>
+                        </div>
+                        <div class="platform-name">${platform.name}</div>
+                    </div>
+                    <div class="platform-status">
+                        <div class="status-icon ${isAvailable ? 'available' : 'not-available'}">
+                            <i class="fas ${isAvailable ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                        </div>
+                        <div class="status-text">
+                            ${isAvailable ? '已发行' : '未发行'}
+                        </div>
+                    </div>
+                    <div class="platform-actions">
+                        <button class="action-btn">
+                            <i class="fas fa-external-link-alt"></i> 访问平台
+                        </button>
+                    </div>
+                `;
+                
+                platformsGrid.appendChild(platformCard);
+            });
+            
+            // 更新统计信息
+            availableCount.textContent = available;
+            notAvailableCount.textContent = notAvailable;
+            totalCount.textContent = musicPlatforms.length;
+            
+            loading.style.display = 'none';
+            resultsContainer.style.display = 'block';
+            
+            // 滚动到结果区域
+            resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 初始化页面时显示一些示例数据
+        window.addEventListener('DOMContentLoaded', () => {
+            artistInput.value = '周杰伦';
+            songInput.value = '七里香';
+            searchMusicAvailability();
+        });
+    </script>
+</body>
+</html>
