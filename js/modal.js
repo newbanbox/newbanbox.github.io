@@ -732,6 +732,8 @@ function openTool(toolType) {
     }
     if (needShowModal) {
         modal.style.display = 'block';
+        
+    }else{
         needShowModal = true
     }
 }
