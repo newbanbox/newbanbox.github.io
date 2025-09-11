@@ -6,6 +6,7 @@
 
 // 全局变量
 let currentTool = null;
+let needShowModal = true;
 
 // 打开工具模态框
 function openTool(toolType) {
@@ -17,9 +18,10 @@ function openTool(toolType) {
     // 根据工具类型设置模态框内容和标题
     switch (toolType) {
         case 'musicRelease':
-
-        //跳转到二级页面
-        window.location.assign("./pages/music-release.html");
+            needShowModal = false
+            //跳转到二级页面
+            // window.location.assign("./pages/music-release.html");
+            window.open("./pages/music-release.html", '_blank');
             break;
         case 'imageToWord':
             modalTitle.textContent = '图片转Word工具';
@@ -728,8 +730,10 @@ function openTool(toolType) {
         default:
             modalBody.innerHTML = `<p>该功能正在开发中，敬请期待！</p>`;
     }
-
-    modal.style.display = 'block';
+    if (needShowModal) {
+        modal.style.display = 'block';
+        needShowModal = true
+    }
 }
 
 // 关闭模态框
