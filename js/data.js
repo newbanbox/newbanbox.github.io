@@ -46,6 +46,15 @@ const tools = [
 
 },
 {
+  id: 'reverseCompoundInterest',
+  title: '复利逆推计算器',
+  icon: 'search-dollar',
+  description: '根据本金、最终资产和时间，计算年化收益率。',
+  category: 'other',
+  button_text: '使用工具'
+
+},
+{
   id: 'qrGenerator',
   title: '二维码生成',
   icon: 'qrcode',

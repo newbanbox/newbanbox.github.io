@@ -261,7 +261,65 @@ function openTool(toolType) {
                 </div>
             `;
             break;
-
+            case 'reverseCompoundInterest':
+                modalTitle.textContent = '复利逆推计算器';
+                modalBody.innerHTML = `
+                    <div class="form-group">
+                        <label for="principal">本金（元）</label>
+                        <input type="number" id="reversePrincipal" placeholder="请输入初始投资金额">
+                    </div>
+                    <div class="form-group">
+                        <label for="finalAmount">最终资产（元）</label>
+                        <input type="number" id="reverseFinalAmount" placeholder="请输入最终获得的金额">
+                    </div>
+                    <div class="form-group">
+                        <label for="time">投资时间（年）</label>
+                        <input type="number" id="reverseTime" placeholder="请输入投资年限">
+                    </div>
+                    <div class="form-group">
+                        <label for="compoundFrequency">复利频率</label>
+                        <select id="reverseCompoundFrequency">
+                            <option value="1">每年</option>
+                            <option value="2">每半年</option>
+                            <option value="4">每季度</option>
+                            <option value="12">每月</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" onclick="closeModal()">取消</button>
+                        <button class="btn btn-primary" onclick="calculateReverseCompoundInterest()">计算年化收益</button>
+                    </div>
+                    <div id="reverseResult" class="result-container" style="display: none;">
+                        <h3>计算结果</h3>
+                        <div class="result-card">
+                            <div class="result-value" id="reverseResultValue">0.00%</div>
+                            <div class="result-details">
+                                <div class="result-item">
+                                    <div class="label">本金</div>
+                                    <div class="value" id="reverseResultPrincipal">0.00</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="label">最终资产</div>
+                                    <div class="value" id="reverseResultFinalAmount">0.00</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="label">投资时间</div>
+                                    <div class="value" id="reverseResultTime">0</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="label">复利频率</div>
+                                    <div class="value" id="reverseResultFrequency">每年</div>
+                                </div>
+                            </div>
+                            <div class="visualization" id="reverseVisualization">
+                                <!-- 可视化图表将在这里生成 -->
+                            </div>
+                        </div>
+                        <a id="downloadReverseResult" class="download-btn" href="#" download="reverse_compound_result.txt">下载结果</a>
+                    </div>
+                `;
+                break;
+                
         case 'compoundInterest':
             modalTitle.textContent = '复利计算器';
             modalBody.innerHTML = `
