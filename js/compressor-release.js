@@ -18,23 +18,23 @@ function calculateCompressorRelease() {
 
 
     // 计算各种乐器的释放时间（基于BPM）
-    const kickRelease = calculateValues(bpm, 50);
-    const snareRelease = calculateValues(bpm, 150);
-    const tomRelease = calculateValues(bpm, 250);
-    const bassRelease = calculateValues(bpm, 50);
-    const slapBassRelease = calculateValues(bpm, 80);
-    const vocalRelease = calculateValues(bpm, 100);
-    const AGuitarRelease = calculateValues(bpm, 150);
-    const EGuitarRelease = calculateValues(bpm, 120);
-    const pianoRelease = calculateValues(bpm, 300);
-    const EPianoRelease = calculateValues(bpm, 200);
-    const stringsRelease = calculateValues(bpm, 500);
-    const windRelease = calculateValues(bpm, 200);
-    const chineseKickRelease = calculateValues(bpm, 300);
-    const erhuKickRelease = calculateValues(bpm, 200);
-    const diziRelease = calculateValues(bpm, 120);
-    const guzhengRelease = calculateValues(bpm, 250);
-    const guqinRelease = calculateValues(bpm, 800);
+    const kickRelease = calculateValues2(bpm, 50);
+    const snareRelease = calculateValues2(bpm, 150);
+    const tomRelease = calculateValues2(bpm, 250);
+    const bassRelease = calculateValues2(bpm, 50);
+    const slapBassRelease = calculateValues2(bpm, 80);
+    const vocalRelease = calculateValues2(bpm, 100);
+    const AGuitarRelease = calculateValues2(bpm, 150);
+    const EGuitarRelease = calculateValues2(bpm, 120);
+    const pianoRelease = calculateValues2(bpm, 300);
+    const EPianoRelease = calculateValues2(bpm, 200);
+    const stringsRelease = calculateValues2(bpm, 500);
+    const windRelease = calculateValues2(bpm, 200);
+    const chineseKickRelease = calculateValues2(bpm, 300);
+    const erhuKickRelease = calculateValues2(bpm, 200);
+    const diziRelease = calculateValues2(bpm, 120);
+    const guzhengRelease = calculateValues2(bpm, 250);
+    const guqinRelease = calculateValues2(bpm, 800);
 
     //先清空容器数据
     document.getElementById('resultContainer').innerHTML = ''
@@ -46,23 +46,23 @@ function calculateCompressorRelease() {
     const downloadLink = document.getElementById('downloadCompressorResult');
     const resultText = `压缩释放时间计算结果 (基于 ${bpm} BPM):
     
- ${updateDisplay('底鼓', 'kickRelease', kickRelease, 'ms', '建议范围: 20-200ms')}  
- ${updateDisplay('军鼓', 'snareRelease', snareRelease, 'ms', '建议范围: 50-300ms')} 
- ${updateDisplay('通鼓', 'tomRelease', tomRelease, 'ms', '建议范围: 100-500ms')} 
- ${updateDisplay('贝斯(指弹)', 'bassRelease', bassRelease, 'ms', '建议范围: 20-200ms')} 
- ${updateDisplay('贝斯(slap)', 'slapBassRelease', slapBassRelease, 'ms', '建议范围: 50-150ms')} 
- ${updateDisplay('人声', 'vocalRelease', vocalRelease, 'ms', '建议范围: 50-300ms')}  
- ${updateDisplay('原声吉他', 'AGuitarRelease', AGuitarRelease, 'ms', '建议范围: 50-300ms')} 
- ${updateDisplay('电吉他', 'EGuitarRelease', EGuitarRelease, 'ms', '建议范围: 40-250ms')}  
- ${updateDisplay('原声钢琴', 'pianoRelease', pianoRelease, 'ms', '建议范围: 100-1000ms')} 
- ${updateDisplay('电钢琴', 'EPianoRelease', EPianoRelease, 'ms', '建议范围: 50-400ms')}  
- ${updateDisplay('弦乐队(合奏)', 'stringsRelease', stringsRelease, 'ms', '建议范围: 50-400ms')} 
- ${updateDisplay('管乐(萨克斯/小号)', 'windRelease', windRelease, 'ms', '建议范围: 100-500ms')} 
- ${updateDisplay('大鼓/堂鼓', 'chineseKickRelease', chineseKickRelease, 'ms', '建议范围: 100-600ms')} 
- ${updateDisplay('二胡', 'erhuKickRelease', erhuKickRelease, 'ms', '建议范围: 100-500ms')} 
- ${updateDisplay('笛子/萧', 'diziRelease', diziRelease, 'ms', '建议范围: 50-300ms')} 
- ${updateDisplay('古筝/琵琶', 'guzhengRelease', guzhengRelease, 'ms', '建议范围: 100-400ms')} 
- ${updateDisplay('古琴', 'guqinRelease', guqinRelease, 'ms', '建议范围: 300-1000ms')} 
+ ${updateDisplay2('底鼓', 'kickRelease', kickRelease, 'ms', '建议范围: 20-200ms')}  
+ ${updateDisplay2('军鼓', 'snareRelease', snareRelease, 'ms', '建议范围: 50-300ms')} 
+ ${updateDisplay2('通鼓', 'tomRelease', tomRelease, 'ms', '建议范围: 100-500ms')} 
+ ${updateDisplay2('贝斯(指弹)', 'bassRelease', bassRelease, 'ms', '建议范围: 20-200ms')} 
+ ${updateDisplay2('贝斯(slap)', 'slapBassRelease', slapBassRelease, 'ms', '建议范围: 50-150ms')} 
+ ${updateDisplay2('人声', 'vocalRelease', vocalRelease, 'ms', '建议范围: 50-300ms')}  
+ ${updateDisplay2('原声吉他', 'AGuitarRelease', AGuitarRelease, 'ms', '建议范围: 50-300ms')} 
+ ${updateDisplay2('电吉他', 'EGuitarRelease', EGuitarRelease, 'ms', '建议范围: 40-250ms')}  
+ ${updateDisplay2('原声钢琴', 'pianoRelease', pianoRelease, 'ms', '建议范围: 100-1000ms')} 
+ ${updateDisplay2('电钢琴', 'EPianoRelease', EPianoRelease, 'ms', '建议范围: 50-400ms')}  
+ ${updateDisplay2('弦乐队(合奏)', 'stringsRelease', stringsRelease, 'ms', '建议范围: 50-400ms')} 
+ ${updateDisplay2('管乐(萨克斯/小号)', 'windRelease', windRelease, 'ms', '建议范围: 100-500ms')} 
+ ${updateDisplay2('大鼓/堂鼓', 'chineseKickRelease', chineseKickRelease, 'ms', '建议范围: 100-600ms')} 
+ ${updateDisplay2('二胡', 'erhuKickRelease', erhuKickRelease, 'ms', '建议范围: 100-500ms')} 
+ ${updateDisplay2('笛子/萧', 'diziRelease', diziRelease, 'ms', '建议范围: 50-300ms')} 
+ ${updateDisplay2('古筝/琵琶', 'guzhengRelease', guzhengRelease, 'ms', '建议范围: 100-400ms')} 
+ ${updateDisplay2('古琴', 'guqinRelease', guqinRelease, 'ms', '建议范围: 300-1000ms')} 
     `;
     const blob = new Blob([resultText], { type: 'text/plain' });
     downloadLink.href = URL.createObjectURL(blob);
@@ -70,7 +70,7 @@ function calculateCompressorRelease() {
 
 
 // 更新显示结果
-function updateDisplay(name, elementId, values, unit, mark) {
+function updateDisplay2(name, elementId, values, unit, mark) {
     const resultContainer = document.getElementById('resultContainer');
     let output = 0;
     // 添加所有值
@@ -101,7 +101,7 @@ function updateDisplay(name, elementId, values, unit, mark) {
 
 
 // 计算最接近参考值的
-function calculateValues(bpm, referenceValue) {
+function calculateValues2(bpm, referenceValue) {
 
     // 计算64分音符的时长（毫秒）
     const value = 60000 / (bpm * 64);

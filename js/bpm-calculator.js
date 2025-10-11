@@ -27,7 +27,7 @@ function initBpmCalculator() {
     
 
     tapTimes = [];
-    updateDisplay();
+    updateBpmDisplay();
     // 添加事件监听
     tapButton.addEventListener('click', tap);
     resetBtn.addEventListener('click', resetBpm);
@@ -60,7 +60,7 @@ function tap() {
     }
     
     // 更新显示
-    updateDisplay();
+    updateBpmDisplay();
     
     // 添加视觉反馈
     animateBeat();
@@ -70,7 +70,7 @@ function tap() {
 }
 
 // 更新显示
-function updateDisplay() {
+function updateBpmDisplay() {
     tapCount.textContent = tapTimes.length.toString();
     // 添加脉冲动画
     if (tapTimes.length > 0) {
@@ -103,7 +103,7 @@ function calculateBpm() {
 // 重置
 function resetBpm() {
     tapTimes = [];
-    updateDisplay();
+    updateBpmDisplay();
     bpmDisplay.textContent = '0';
 }
 

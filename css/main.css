@@ -1348,12 +1348,7 @@ tr:hover {
 
  /* FC游戏 */
  
-.result-value {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    margin: 10px 0;
-}
+
 
 .result-details {
     display: grid;
@@ -1595,4 +1590,160 @@ tr:hover {
     font-size: 0.85rem;
     color: var(--gray-color);
     margin-top: 5px;
+}
+
+/* html压缩 */
+
+.result-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.result-item {
+    background: #f0f4ff;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.result-item .label {
+    font-size: 0.9rem;
+    color: var(--gray-color);
+}
+
+.result-item .value {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.visualization {
+    margin-top: 20px;
+    height: 100px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.bar {
+    width: 40px;
+    background: var(--primary-color);
+    border-radius: 4px 4px 0 0;
+    position: relative;
+}
+
+.bar-label {
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.bar-value {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* HTML压缩工具新增样式 */
+.code-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.code-editor {
+    width: 100%;
+    height: 200px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: monospace;
+    resize: vertical;
+}
+
+.code-compare {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.code-compare-box {
+    flex: 1;
+    min-width: 300px;
+}
+
+.code-compare-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.code-compare-content {
+    padding: 15px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 200px;
+    overflow: auto;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+.compressed-result {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.compression-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding: 15px;
+    background: #f0f4ff;
+    border-radius: 8px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--gray-color);
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.compression-ratio {
+    color: var(--success-color);
+}
+
+.copy-btn {
+    display: inline-block;
+    padding: 8px 15px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.copy-btn:hover {
+    background: var(--secondary-color);
 }

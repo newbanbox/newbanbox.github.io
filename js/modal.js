@@ -1312,6 +1312,46 @@ function openTool(toolType) {
             // 加载新闻
             loadNews();
             break;
+            case 'htmlCompressor':
+                modalTitle.textContent = 'HTML压缩工具';
+                modalBody.innerHTML = `
+                    <div class="form-group">
+                        <label for="htmlInput">输入HTML代码</label>
+                        <textarea id="htmlInput" class="code-editor" placeholder="在此粘贴您的HTML代码..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" onclick="closeModal()">取消</button>
+                        <button class="btn btn-primary" onclick="compressHTML()">压缩代码</button>
+                    </div>
+                    <div id="compressionResult" class="result-container" style="display: none;">
+                        <h3>压缩结果</h3>
+                        <div class="code-compare">
+                            <div class="code-compare-box">
+                                <div class="code-compare-title">原始代码</div>
+                                <div id="originalCode" class="code-compare-content"></div>
+                                <div class="stat-label">字符数: <span id="originalLength">0</span></div>
+                            </div>
+                            <div class="code-compare-box">
+                                <div class="code-compare-title">压缩后代码</div>
+                                <div id="compressedCode" class="code-compare-content compressed-result"></div>
+                                <div class="stat-label">字符数: <span id="compressedLength">0</span></div>
+                                <button class="copy-btn" onclick="copyCompressedCode()">复制压缩代码</button>
+                            </div>
+                        </div>
+                        <div class="compression-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">压缩率</div>
+                                <div class="stat-value compression-ratio" id="compressionRatio">0%</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">节省空间</div>
+                                <div class="stat-value" id="spaceSaved">0 字符</div>
+                            </div>
+                        </div>
+                        <a id="downloadCompressed" class="download-btn" href="#" download="compressed.html">下载压缩文件</a>
+                    </div>
+                `;
+                break
         case 'fcGames':
             needShowModal = false
             //跳转到二级页面

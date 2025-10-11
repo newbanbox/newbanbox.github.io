@@ -109,6 +109,15 @@ const tools = [
   button_text: '使用工具'
 
 },
+{
+  id: 'htmlCompressor',
+  title: 'HTML压缩工具',
+  icon: 'file-code',
+  description: '将HTML代码压缩成一行，减少文件大小，提高加载速度。',
+  category: 'text',
+  button_text: '使用工具'
+
+},
 
 {
   id: 'urlShortener',
