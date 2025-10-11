@@ -261,9 +261,9 @@ function openTool(toolType) {
                 </div>
             `;
             break;
-            case 'reverseCompoundInterest':
-                modalTitle.textContent = '复利逆推计算器';
-                modalBody.innerHTML = `
+        case 'reverseCompoundInterest':
+            modalTitle.textContent = '复利逆推计算器';
+            modalBody.innerHTML = `
                     <div class="form-group">
                         <label for="principal">本金（元）</label>
                         <input type="number" id="reversePrincipal" placeholder="请输入初始投资金额">
@@ -318,8 +318,8 @@ function openTool(toolType) {
                         <a id="downloadReverseResult" class="download-btn" href="#" download="reverse_compound_result.txt">下载结果</a>
                     </div>
                 `;
-                break;
-                
+            break;
+
         case 'compoundInterest':
             modalTitle.textContent = '复利计算器';
             modalBody.innerHTML = `
@@ -688,7 +688,534 @@ function openTool(toolType) {
             initBpmCalculator()
 
             break;
+        case 'reverbCalculator':
+            modalTitle.textContent = '混响时间计算器';
+            modalBody.innerHTML = `
+                        <p>根据BPM值计算房间、板式和厅堂混响的预延迟和衰减时间参考值。</p>
+                        
+                        <div class="form-group">
+                            <label for="bpmInput">BPM值（每分钟节拍数）</label>
+                            <input type="number" id="bpmInput" class="bpm-input" value="120" min="1" max="300" placeholder="输入1-300之间的BPM值">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button class="btn btn-secondary" onclick="closeModal()">取消</button>
+                            <button class="btn btn-primary" onclick="calculateReverbTimes()">计算</button>
+                        </div>
+                        
+                        <div id="reverbResult" class="result-container" style="display: none;">
+                            <h3>计算结果</h3>
+                            
+                            <div class="reverb-results">
+                                <div class="reverb-result-card">
+                                    <h3>房间混响</h3>
+                                    <div class="reverb-param">
+                                        <div class="param-label">发送量</div>
+                                        <div class="param-value">-15 至 -20 dB</div>
+                                        <div class="param-range">(非常低)</div>
+                                    </div>
+                                    <div class="reverb-param">
+                                        <div class="param-label">预延迟</div>
+                                        <div class="param-value" id="roomPreDelay">0 ms</div>
+                                        <div class="param-range">参考范围: 0-10 ms</div>
+                                        <div class="value-list" id="roomPreDelayValues"></div>
+                                    </div>
+                                    <div class="reverb-param">
+                                        <div class="param-label">衰减时间</div>
+                                        <div class="param-value" id="roomDecay">0.7 秒</div>
+                                        <div class="param-range">参考范围: 0.4-1.0 秒</div>
+                                        <div class="value-list" id="roomDecayValues"></div>
+                                    </div>
+                                    <p class="note">增加真实感，发送量要小到"几乎听不见但能感觉到"</p>
+                                </div>
+                                
+                                <div class="reverb-result-card">
+                                    <h3>板式混响</h3>
+                                    <div class="reverb-param">
+                                        <div class="param-label">发送量</div>
+                                        <div class="param-value">0 dB</div>
+                                        <div class="param-range">(推子推到0，作为基准)</div>
+                                    </div>
+                                    <div class="reverb-param">
+                                        <div class="param-label">预延迟</div>
+                                        <div class="param-value" id="platePreDelay">0 ms</div>
+                                        <div class="param-range">参考范围: 10-30 ms</div>
+                                        <div class="value-list" id="platePreDelayValues"></div>
+                                    </div>
+                                    <div class="reverb-param">
+                                        <div class="param-label">衰减时间</div>
+                                        <div class="param-value" id="plateDecay">2.0 秒</div>
+                                        <div class="param-range">参考范围: 1.5-2.5 秒</div>
+                                        <div class="value-list" id="plateDecayValues"></div>
+                                    </div>
+                                    <p class="note">人声最主要的混响，发送量最大, 增加魅力和光泽</p>
+                                </div>
+                                
+                                <div class="reverb-result-card">
+                                    <h3>厅堂混响</h3>
+                                    <div class="reverb-param">
+                                        <div class="param-label">发送量</div>
+                                        <div class="param-value">-8 至 -12 dB</div>
+                                        <div class="param-range">(比板式低很多)</div>
+                                    </div>
+                                    <div class="reverb-param">
+                                        <div class="param-label">预延迟</div>
+                                        <div class="param-value" id="hallPreDelay">0 ms</div>
+                                        <div class="param-range">参考范围: 20-40 ms</div>
+                                        <div class="value-list" id="hallPreDelayValues"></div>
+                                    </div>
+                                    <div class="reverb-param">
+                                        <div class="param-label">衰减时间</div>
+                                        <div class="param-value" id="hallDecay">2.5 秒</div>
+                                        <div class="param-range">参考范围: 2.0-4.0 秒</div>
+                                        <div class="value-list" id="hallDecayValues"></div>
+                                    </div>
+                                    <p class="note">营造空间氛围感，发送量适中，避免模糊</p>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 20px; text-align: center;">
+                                <a id="downloadReverbResult" class="download-btn" href="#" download="reverb_calculator_result.txt">下载结果</a>
+                            </div>
+                        </div>
 
+                        <h3 style="margin-top: 30px;">混响参数参考表</h3>
+                        <table class="reverb-table">
+                            <thead>
+                                <tr>
+                                    <th>混响类型</th>
+                                    <th>发送量（建议起点）</th>
+                                    <th>预延迟</th>
+                                    <th>衰减时间</th>
+                                    <th>备注</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="reverb-type">板式混响</td>
+                                    <td>0 dB (推子推到0，作为基准)</td>
+                                    <td>10-30 ms</td>
+                                    <td>1.5 - 2.5 秒</td>
+                                    <td>人声最主要的混响，发送量最大, 增加魅力和光泽</td>
+                                </tr>
+                                <tr>
+                                    <td class="reverb-type">厅堂混响</td>
+                                    <td>-8 dB 至 -12 dB (比板式低很多)</td>
+                                    <td>20-40 ms</td>
+                                    <td>2.0 - 4.0 秒</td>
+                                    <td>营造空间氛围感，发送量适中, 避免模糊</td>
+                                </tr>
+                                <tr>
+                                    <td class="reverb-type">房间混响</td>
+                                    <td>-15 dB 至 -20 dB (非常低)</td>
+                                    <td>0-10 ms</td>
+                                    <td>0.4 - 1.0 秒</td>
+                                    <td>增加真实感，发送量要小到"几乎听不见但能感觉到"</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `;
+            break;
+
+        case 'compressorRelease':
+            modalTitle.textContent = '压缩释放时间计算器';
+            modalBody.innerHTML = `
+                            <div class="form-group">
+                                <label for="bpmInput">BPM值（每分钟节拍数）</label>
+                                <input type="number" id="bpmInput" class="bpm-input" value="120" min="1" max="300" placeholder="输入1-300之间的BPM值">
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-secondary" onclick="closeModal()">取消</button>
+                                <button class="btn btn-primary" onclick="calculateCompressorRelease()">计算</button>
+                            </div>
+                            <div id="compressorResult" class="result-container" style="display: none;">
+                                <h3>计算结果</h3>
+                                <div class="result-card">
+                                    <div class="result-details" id="resultContainer">
+                                        <div class="result-item">
+                                            <div class="label">底鼓</div>
+                                            <div class="value" id="kickRelease">0 ms</div>
+                                            <div class="note">建议范围: 50-150ms</div>
+                                        </div>
+                                        <div class="result-item">
+                                            <div class="label">军鼓</div>
+                                            <div class="value" id="snareRelease">0 ms</div>
+                                            <div class="note">建议范围: 100-200ms</div>
+                                        </div>
+                                        <div class="result-item">
+                                            <div class="label">贝斯</div>
+                                            <div class="value" id="bassRelease">0 ms</div>
+                                            <div class="note">建议范围: 150-300ms</div>
+                                        </div>
+                                        <div class="result-item">
+                                            <div class="label">人声</div>
+                                            <div class="value" id="vocalRelease">0 ms</div>
+                                            <div class="note">建议范围: 200-400ms</div>
+                                        </div>
+                                        <div class="result-item">
+                                            <div class="label">吉他</div>
+                                            <div class="value" id="guitarRelease">0 ms</div>
+                                            <div class="note">建议范围: 100-250ms</div>
+                                        </div>
+                                        <div class="result-item">
+                                            <div class="label">钢琴</div>
+                                            <div class="value" id="pianoRelease">0 ms</div>
+                                            <div class="note">建议范围: 200-500ms</div>
+                                        </div>
+                                    </div>
+                                    <div class="visualization" id="releaseVisualization" style="display: none;">
+                                        <!-- 可视化图表将在这里生成 -->
+                                    </div>
+                                </div>
+                                <a id="downloadCompressorResult" class="download-btn" href="#" download="compressor_release_result.txt">下载结果</a>
+                                
+                            </div>
+                            
+                            <div class="audio-table-container" style="margin-top: 30px;">
+        <div class="table-header">
+            <h1>音乐制作压缩参数参考表</h1>
+            <p>专业音频处理参数指南 - 适用于音乐制作与混音</p>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>乐器/音源</th>
+                    <th>启动时间 (Attack)</th>
+                    <th>释放时间 (Release)</th>
+                    <th>压缩比 (Ratio)</th>
+                    <th>核心目标</th>
+                    <th>重要注意事项</th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td class="category-header" colspan="6">常见乐器</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">人声(主唱)</td>
+                        <td>
+                            <span class="param-range">10-50ms</span>
+                            <span class="param-value">20ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">50-300ms</span>
+                            <span class="param-value">100ms(或Auto)</span>
+                        </td>
+                        <td>
+                            <span class="param-range">2:1-4:1</span>
+                            <span class="param-value">3:1</span>
+                        </td>
+                        <td>保留咬字清晰度,平衡动态起伏</td>
+                        <td class="important-note">抒情歌用低压缩比(2:1),流行/摇滚可提高至4:1</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">背景和声</td>
+                        <td>
+                            <span class="param-range">5-30ms</span>
+                            <span class="param-value">15ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">30-200ms</span>
+                            <span class="param-value">80ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">3:1-6:1</span>
+                            <span class="param-value">4:1</span>
+                        </td>
+                        <td>增强融合度,弱化个体存在感</td>
+                        <td class="important-note">高压缩比(4:1+)提升"垫底"效果</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">原声吉他</td>
+                        <td>
+                            <span class="param-range">20-60ms</span>
+                            <span class="param-value">30ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">50-300ms</span>
+                            <span class="param-value">150ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">2:1-4:1</span>
+                            <span class="param-value">2.5:1</span>
+                        </td>
+                        <td>保留拨弦音头,控制尾音动态</td>
+                        <td class="important-note">分解和弦宜轻压缩(2:1),扫弦节奏可用3:1</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">电吉他(清音/过载)</td>
+                        <td>
+                            <span class="param-range">10-40ms</span>
+                            <span class="param-value">20ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">40-250ms</span>
+                            <span class="param-value">120ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">2:1-6:1</span>
+                            <span class="param-value">3:1</span>
+                        </td>
+                        <td>维持音色特质,略微收紧峰值</td>
+                        <td class="important-note">高失真音色禁用压缩(除非修复录音)</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">钢琴(原声)</td>
+                        <td>
+                            <span class="param-range">30-100ms+</span>
+                            <span class="param-value">50ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">100ms-1s+</span>
+                            <span class="param-value">300ms (Auto)</span>
+                        </td>
+                        <td>
+                            <span class="param-range">1.5:1-3:1</span>
+                            <span class="param-value">2:1</span>
+                        </td>
+                        <td>绝对保留击键感,均匀化衰减尾音</td>
+                        <td class="important-note">高于3:1会破坏自然动态</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">电钢琴</td>
+                        <td>
+                            <span class="param-range">10-40ms</span>
+                            <span class="param-value">25ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">50-400ms</span>
+                            <span class="param-value">200ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">3:1-5:1</span>
+                            <span class="param-value">4:1</span>
+                        </td>
+                        <td>控制延音电平,避免音色碎片化</td>
+                        <td class="important-note">FM电钢需低压缩比(2:1)保金属质感</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">贝斯(指弹)</td>
+                        <td>
+                            <span class="param-range">5-20ms</span>
+                            <span class="param-value">10ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">20-200ms</span>
+                            <span class="param-value">50ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">3:1-8:1</span>
+                            <span class="param-value">4:1</span>
+                        </td>
+                        <td>强化音头冲击力,压制低频泛滥</td>
+                        <td class="important-note">高压缩比(6:1+)提升"向前冲"感</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">贝斯(Slap)</td>
+                        <td>
+                            <span class="param-range">10-30ms</span>
+                            <span class="param-value">15ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">50-150ms</span>
+                            <span class="param-value">80ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">4:1-10:1</span>
+                            <span class="param-value">6:1</span>
+                        </td>
+                        <td>抑制高频瞬态爆音,维持低频稳定</td>
+                        <td class="important-note">极快释放(50ms)制造"抽吸"节奏感</td>
+                    </tr>
+                    <tr>
+                        <td class="category-header" colspan="6">打击乐器</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">底鼓(Kick)</td>
+                        <td>
+                            <span class="param-range">1-30ms</span>
+                            <span class="param-value">10ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">20-200ms</span>
+                            <span class="param-value">50ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">2:1-6:1</span>
+                            <span class="param-value">4:1</span>
+                        </td>
+                        <td>短启动增力度,长启动增弹性</td>
+                        <td class="important-note">EDM用高压缩比(6:1)+短释放(30ms)塑形</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">军鼓(Snare)</td>
+                        <td>
+                            <span class="param-range">5-30ms</span>
+                            <span class="param-value">15ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">50-300ms</span>
+                            <span class="param-value">150ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">3:1-8:1</span>
+                            <span class="param-value">4:1</span>
+                        </td>
+                        <td>控制瞬态冲击,增强鼓腔共鸣</td>
+                        <td class="important-note">录音过爆时用极限压缩(8:1+5ms)修复</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">通鼓(Toms)</td>
+                        <td>
+                            <span class="param-range">10-40ms</span>
+                            <span class="param-value">20ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">100-500ms</span>
+                            <span class="param-value">250ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">3:1-5:1</span>
+                            <span class="param-value">4:1</span>
+                        </td>
+                        <td>平衡击打感与共鸣衰减</td>
+                        <td class="important-note">大通鼓用慢释放(400ms)匹配低频衰减</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">大鼓/堂鼓</td>
+                        <td>
+                            <span class="param-range">1-20ms</span>
+                            <span class="param-value">5ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">100-600ms</span>
+                            <span class="param-value">300ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">3:1-6:1</span>
+                            <span class="param-value">4:1</span>
+                        </td>
+                        <td>增强击打瞬间的冲击力，控制鼓腔的长频共鸣</td>
+                        <td class="important-note">根据乐曲需要：短启动+短释放(80ms)增加力度感；长释放匹配低频自然衰减</td>
+                    </tr>
+                    <tr>
+                        <td class="category-header" colspan="6">管弦乐器</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">弦乐队(合奏)</td>
+                        <td>
+                            <span class="param-range">20-100ms</span>
+                            <span class="param-value">50ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">200ms-1s+</span>
+                            <span class="param-value">500ms (Auto)</span>
+                        </td>
+                        <td>
+                            <span class="param-range">1.5:1-3:1</span>
+                            <span class="param-value">2:1</span>
+                        </td>
+                        <td>保留自然绵延感,轻微平滑动态</td>
+                        <td class="important-note">高于3:1会产生机械感</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">管乐(萨克斯/小号)</td>
+                        <td>
+                            <span class="param-range">10-40ms</span>
+                            <span class="param-value">25ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">100-500ms</span>
+                            <span class="param-value">200ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">2:1-5:1</span>
+                            <span class="param-value">3:1</span>
+                        </td>
+                        <td>控制强音爆发,保留气息细节</td>
+                        <td class="important-note">爵士乐solo宜低压缩比(2:1)</td>
+                    </tr>
+                    <tr>
+                        <td class="category-header" colspan="6">中国传统乐器</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">二胡</td>
+                        <td>
+                            <span class="param-range">20-80ms</span>
+                            <span class="param-value">40ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">100-500ms</span>
+                            <span class="param-value">200ms (或Auto)</span>
+                        </td>
+                        <td>
+                            <span class="param-range">2:1-4:1</span>
+                            <span class="param-value">2.5:1</span>
+                        </td>
+                        <td>保留揉弦与滑音的韵味，控制强弓的突兀感</td>
+                        <td class="important-note">过快的启动会削弱琴弓的"擦弦"质感；慢启动可保留乐句的歌唱性</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">笛子/箫</td>
+                        <td>
+                            <span class="param-range">5-25ms</span>
+                            <span class="param-value">10ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">50-300ms</span>
+                            <span class="param-value">120ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">2:1-5:1</span>
+                            <span class="param-value">3:1</span>
+                        </td>
+                        <td>控制高音区的气息爆发音(喷口)，保持音色圆润</td>
+                        <td class="important-note">针对花舌等快速技巧，释放时间不宜过慢，以免产生"抽吸感"</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">古筝/琵琶</td>
+                        <td>
+                            <span class="param-range">10-40ms</span>
+                            <span class="param-value">20ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">100-400ms</span>
+                            <span class="param-value">250ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">2:1-4:1</span>
+                            <span class="param-value">3:1</span>
+                        </td>
+                        <td>保留"劈、托、抹"等指法的音头，均匀化余音的衰减</td>
+                        <td class="important-note">扫摇等激烈技法可提高压缩比(4:1)以控制整体动态；慢板乐曲宜用低比值(2:1)</td>
+                    </tr>
+                    <tr>
+                        <td class="instrument">古琴</td>
+                        <td>
+                            <span class="param-range">30-150ms+</span>
+                            <span class="param-value">80ms</span>
+                        </td>
+                        <td>
+                            <span class="param-range">300ms-2s+</span>
+                            <span class="param-value">800ms (Auto)</span>
+                        </td>
+                        <td>
+                            <span class="param-range">1.5:1-2.5:1</span>
+                            <span class="param-value">2:1</span>
+                        </td>
+                        <td>极其谨慎地处理，最大程度保留其自然的动态和空间感</td>
+                        <td class="important-note">压缩比绝对不要超过3:1,否则会彻底破坏古琴宁静、深邃的意境</td>
+                    </tr>
+                </tbody>
+        </table>
+    </div>
+    
+    <div class="footer-note">
+        <p>注：参数值为通用参考范围，实际应用需根据具体音频素材和音乐风格调整</p>
+    </div>
+                        `;
+            break;
         // 在线直播
         case 'liveStream':
             modalTitle.textContent = '在线直播';
@@ -785,13 +1312,135 @@ function openTool(toolType) {
             // 加载新闻
             loadNews();
             break;
+        case 'fcGames':
+            needShowModal = false
+            //跳转到二级页面
+            // window.location.assign("./pages/music-release.html");
+            window.open("./game/index.html", '_blank');
+        case 'fcGames':
+            modalTitle.textContent = 'FC在线游戏';
+            modalBody.innerHTML = `
+                    <div class="game-container">
+                        <h3>选择游戏</h3>
+                        <div class="game-selector">
+                            <div class="game-item active" onclick="selectGame('super-mario')">
+                                <i class="fas fa-running"></i>
+                                <div>超级马里奥</div>
+                            </div>
+                            <div class="game-item" onclick="selectGame('contra')">
+                                <i class="fas fa-gun"></i>
+                                <div>魂斗罗</div>
+                            </div>
+                            <div class="game-item" onclick="selectGame('tetris')">
+                                <i class="fas fa-cubes"></i>
+                                <div>俄罗斯方块</div>
+                            </div>
+                            <div class="game-item" onclick="selectGame('pacman')">
+                                <i class="fas fa-ghost"></i>
+                                <div>吃豆人</div>
+                            </div>
+                        </div>
+                        
+                        <div class="game-status">
+                            <div class="game-title">超级马里奥</div>
+                            <div class="game-state paused">已暂停</div>
+                        </div>
+                        
+                        <div class="game-screen">
+                            <canvas id="gameCanvas" width="256" height="240"></canvas>
+                        </div>
+                        
+                        <div class="game-controls">
+                            <button class="game-btn" onclick="toggleGameState()">
+                                <i class="fas fa-play"></i> 开始游戏
+                            </button>
+                            <button class="game-btn secondary" onclick="resetGame()">
+                                <i class="fas fa-redo"></i> 重新开始
+                            </button>
+                            <button class="game-btn secondary" onclick="showControlsInfo()">
+                                <i class="fas fa-info-circle"></i> 操作说明
+                            </button>
+                        </div>
+                        
+                        <div class="controls-info" style="display: none;">
+                            <h3>游戏操作说明</h3>
+                            <div class="controls-grid">
+                                <div class="control-item">
+                                    <div class="key">←</div>
+                                    <div>向左移动</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="key">→</div>
+                                    <div>向右移动</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="key">↑</div>
+                                    <div>向上/跳跃</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="key">↓</div>
+                                    <div>向下/蹲下</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="key">Z</div>
+                                    <div>攻击/动作A</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="key">X</div>
+                                    <div>跳跃/动作B</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="key">Enter</div>
+                                    <div>开始游戏</div>
+                                </div>
+                                <div class="control-item">
+                                    <div class="key">ESC</div>
+                                    <div>暂停游戏</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="game-save-section">
+                            <h3>游戏存档</h3>
+                            <p>选择存档槽位保存或加载游戏进度</p>
+                            
+                            <div class="save-slots">
+                                <div class="save-slot empty" onclick="selectSaveSlot(0)">
+                                    <div>存档槽 1</div>
+                                    <div class="save-info">空存档</div>
+                                </div>
+                                <div class="save-slot empty" onclick="selectSaveSlot(1)">
+                                    <div>存档槽 2</div>
+                                    <div class="save-info">空存档</div>
+                                </div>
+                                <div class="save-slot empty" onclick="selectSaveSlot(2)">
+                                    <div>存档槽 3</div>
+                                    <div class="save-info">空存档</div>
+                                </div>
+                            </div>
+                            
+                            <div class="game-controls">
+                                <button class="game-btn" onclick="saveGame()">
+                                    <i class="fas fa-save"></i> 保存游戏
+                                </button>
+                                <button class="game-btn secondary" onclick="loadGame()">
+                                    <i class="fas fa-folder-open"></i> 加载游戏
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+            // 初始化游戏画布
+            setTimeout(initGame, 100);
+            break;
         default:
             modalBody.innerHTML = `<p>该功能正在开发中，敬请期待！</p>`;
     }
     if (needShowModal) {
         modal.style.display = 'block';
-        
-    }else{
+
+    } else {
         needShowModal = true
     }
 }

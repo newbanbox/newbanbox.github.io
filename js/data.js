@@ -127,6 +127,22 @@ const tools = [
   category: 'audio',
   button_text: '使用工具'
 
+},{
+  id: 'reverbCalculator',
+  title: '混响时间计算器',
+  icon: 'wave-square',
+  description: '根据BPM计算房间、板式和厅堂混响的预延迟和混响时间参考值',
+  category: 'audio',
+  button_text: '使用工具'
+
+},{
+  id: 'compressorRelease',
+  title: '释放时间计算器',
+  icon: 'stopwatch',
+  description: '根据BPM值计算常见乐器的压缩释放时间参考值',
+  category: 'audio',
+  button_text: '使用工具'
+
 },
 {
   id: 'musicRelease',
@@ -172,6 +188,15 @@ const tools = [
   description: '创建和管理自动化工作流程，可视化任务编排。',
   category: 'other',
   button_text: '使用工具'
+
+},
+{
+  id: 'fcGames',
+  title: 'FC在线游戏',
+  icon: 'gamepad',
+  description: '重温经典FC游戏，包含超级玛丽、魂斗罗等多款经典游戏。',
+  category: 'other',
+  button_text: '点击进入'
 
 },
 ]

@@ -1,0 +1,135 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="full-screen" content="yes">
+    <meta name="browsermode" content="application">
+    <meta name="x5-orientation" content="landscape">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="x5-page-mode" content="app">
+    <title>FC在线模拟器-小霸王</title>
+    <meta name="keywords" content="fc,在线fc游戏,fc在线模拟器,nes在线模拟器,魂斗罗,超级玛丽,忍者龙剑传," />
+    <meta name="description" content="任天堂FC/NES原版ROM在线玩，可以近乎完美的还原fc卡带游戏的视频和声音。" />
+    <link href="css/jsnes.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="favicon.ico">
+    <script>
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?37cdd753b26fce061fe224b8c78ce7db";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+</head>
+<body>
+    <div class="main">
+        <div class="panel">
+            <div class="controller-area">
+                <div class="controller">
+                    <div id="controls-direction">
+                        <div id="controls-rocker"></div>
+                        <button role="BUTTON_UP" class="up joydirection" id="joystick_btn_up">up</button>
+                        <button role="BUTTON_RIGHT" class="right joydirection" id="joystick_btn_right">right</button>
+                        <button role="BUTTON_DOWN" class="down joydirection" id="joystick_btn_down">down</button>
+                        <button role="BUTTON_LEFT" class="left joydirection" id="joystick_btn_left">left</button>
+                    </div>
+                </div>
+                <!-- <div class="joy">I</div> -->
+                <!-- <div><a href="http://liflag.cn/post/59" target="_blank" class="readme">按键说明</a></div> -->
+            </div>
+            <div class="function-area">
+                <div class="screen">
+                    <div id="emulator" align="center" style="width:100%;height:100%"></div>
+                    <div class="icons">
+                      <!-- <i class="iconfont icon-zanting"></i> -->
+                      <i class="iconfont icon-fangda fullScreen"></i>
+                      <i class="iconfont icon-chongqi restart"></i>
+                      <i class="iconfont icon-jingyin sound"></i>
+                    </div>
+
+                    <div class="tip">
+                      <p>正在载入...</p>
+                    </div>
+                    <div class="qr-code">
+                      <img src="index.html#" alt="">
+                      <p>「乱码三千」 码出一个新世界</p>
+                    </div>
+                </div>
+
+                <div class="function">
+                    <button class="controls-center-select joybtn action" id="joystick_btn_select" role="BUTTON_SELECT">Select</button>
+                    <button class="controls-center-start joybtn" id="joystick_btn_start" role="BUTTON_START">Pause</button>
+                </div>
+            </div>
+            <div class="action-area">
+                <div class="action">
+                    <div id="controls-fire">
+                        <button class="a joybtn" role="BUTTON_A" id="joystick_btn_A">A</button>
+                        <button class="b joybtn" role="BUTTON_B" id="joystick_btn_B">B</button>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="sign">FAMILY <br> COMPUTER</div> -->
+        </div>
+        <a href="index.html#" target="_blank" class="link_btn">按键说明</a>
+    </div>
+    <a href="index.html#" class="copyright">Copyright ©乱码三千</a>
+</body>
+<script src="lib/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="lib/dynamicaudio-min.js" type="text/javascript" charset="utf-8"></script>
+<script src="source/nes.js" type="text/javascript" charset="utf-8"></script>
+<script src="source/utils.js" type="text/javascript" charset="utf-8"></script>
+<script src="source/cpu.js" type="text/javascript" charset="utf-8"></script>
+<script src="source/keyboard.js" type="text/javascript" charset="utf-8"></script>
+<script src="source/mappers.js" type="text/javascript" charset="utf-8"></script>
+<script src="source/papu.js" type="text/javascript" charset="utf-8"></script>
+<script src="source/ppu.js" type="text/javascript" charset="utf-8"></script>
+<script src="source/rom.js" type="text/javascript" charset="utf-8"></script>
+<script src="source/ui.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="lib/debug.mini.js" type="text/javascript" charset="utf-8"></script> -->
+<script src="lib/nipplejs.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="lib/joystick.js" type="text/javascript" charset="utf-8"></script>
+<script src="source/init.js" type="text/javascript" charset="utf-8"></script>
+<!--[if IE]>
+    <script type="text/vbscript" src="source/jsnes-ie-hacks.vbscript"></script>
+<![endif]-->
+<script>
+    function touchDwon(evt) {
+      nes.keyboard.keyDown({
+          keyCode: evt.keyCode
+      });
+  };
+
+  function touchUp(evt) {
+      nes.keyboard.keyUp({
+          keyCode: evt.keyCode
+      });
+  };
+
+  function select(val) {
+      if (val.substring(0, 1) == "#") {
+          return document.querySelector(val);
+      } else {
+          return document.getElementById(val);
+      }
+  }
+
+  var joystick = new Joystick({
+      el: select("controls-rocker"),
+      mode: 'static',
+      color: "rgba(128, 128, 128, 0.6)",
+      size: 150,
+      isFourBtn: false,
+      keyCodes: [87, 83, 65, 68],
+      btn_down_fn: touchDwon,
+      btn_up_fn: touchUp,
+      relative: true,
+  });
+  joystick.init();
+</script>
+</html>
